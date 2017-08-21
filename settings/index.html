@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <!-- The '/homey.js' script must be included in your settings view to work -->
+    <script type="text/javascript" src="/homey.js" data-origin="settings"></script>
+    <script type="text/javascript" src="/manager/webserver/assets/js/jquery.js"></script>
+  </head>
+  <body>
+    <ul class="nav nav-tabs">
+    </ul>
+    <!-- Logging panel -->
+    <div id="panel-1" class="panel">
+      &nbsp;&nbsp;
+      <span class=small>Keep this page open. Realtime logging will stop when you leave this page.</span>
+      <table id="logs" class="table table-condensed" width=100%>
+        <thead>
+          <tr>
+            <th class="">Date and time</th>
+            <th class="">Driver</th>
+            <th class="">Device</th>
+            <th class="">ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class=logentry>
+            <td class="event small" colspan=4>Starting log...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+		<script type="text/javascript">
+
+      function addLogEntry (driver, device, id) {
+        let html = '<tr class="logentry">';
+
+        html += '<td class="event small text-nowrap"> 0000 </td>';
+        html += '<td class="event small">' + driver.getName() + '</td>'
+        html += '<td class="event small">' + device.getName() + '</td>'
+        html += '<td class="data small text-muted">' + id + '</td></tr>'
+        $('table#logs tbody tr:first').before(html)
+      }
+
+			// a method named 'onHomeyReady' must be present in your code
+			function onHomeyReady( Homey ){
+
+					// Tell Homey we're ready to be displayed
+					Homey.ready();
+          let mDrivers = Homey.ManagerDrivers;
+          let drivers = mDrivers.getDrivers();
+
+          drivers.forEach(driverId => {
+            driver = drivers[driverId];
+
+            devices = driver.getDevices();
+            devices.forEach(deviceId => {
+              device = devices[deviceId];
+              addLogEntry(driver, device, deviceId);
+            });
+          });
+
+			}
+			</script>
+
+  </body>
+</html>
